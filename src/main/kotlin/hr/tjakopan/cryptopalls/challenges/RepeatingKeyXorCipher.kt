@@ -2,7 +2,7 @@ package hr.tjakopan.cryptopalls.challenges
 
 import kotlin.experimental.xor
 
-class RepeatingKeyXorCipher {
+object RepeatingKeyXorCipher {
   fun encrypt(data: ByteArray, key: ByteArray): ByteArray {
     val keySize = key.size
     return ByteArray(data.size) { i ->

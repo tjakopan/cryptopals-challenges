@@ -5,8 +5,8 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
-object Aes {
-  fun secretKey(key: ByteArray): SecretKey = SecretKeySpec(key, "AES")
+object AesCipher {
+  private fun secretKey(key: ByteArray): SecretKey = SecretKeySpec(key, "AES")
 
   fun decrypt(
     data: ByteArray,

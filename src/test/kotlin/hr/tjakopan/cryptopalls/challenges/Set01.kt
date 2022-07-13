@@ -28,9 +28,8 @@ class Set01 {
     val text = "Burning 'em, if you ain't quick and nimble\n" +
         "I go crazy when I hear a cymbal"
     val key = "ICE"
-    val cipher = RepeatingKeyXorCipher()
 
-    val encryptedData = cipher.encrypt(text.toByteArray(), key.toByteArray())
+    val encryptedData = RepeatingKeyXorCipher.encrypt(text.asByteArray(), key.asByteArray())
 
     val encryptedHex = encryptedData.encodeToHex()
     encryptedHex shouldBe "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"
@@ -41,7 +40,7 @@ class Set01 {
     val first = "this is a test"
     val second = "wokka wokka!!!"
 
-    val editDistance = editDistance(first.toByteArray(CHARSET), second.toByteArray(CHARSET))
+    val editDistance = editDistance(first.asByteArray(), second.asByteArray())
 
     editDistance shouldBe 37
   }

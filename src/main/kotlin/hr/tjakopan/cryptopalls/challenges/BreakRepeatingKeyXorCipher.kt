@@ -3,7 +3,7 @@ package hr.tjakopan.cryptopalls.challenges
 class BreakRepeatingKeyXorCipher(maxKeySize: Int = 40) {
   private val keySizes = IntRange(2, maxKeySize)
 
-  fun guessKeySizes(data: ByteArray, numberOfKeys: Int = 3): IntArray {
+  private fun guessKeySizes(data: ByteArray, numberOfKeySizeGuesses: Int = 3): IntArray {
     return keySizes.map { keySize ->
       val numOfBlocks = data.size / keySize
       var totalDistance = 0
@@ -23,16 +23,17 @@ class BreakRepeatingKeyXorCipher(maxKeySize: Int = 40) {
       Pair(keySize, totalDistance.toDouble() / keySize / numOfDistances)
     }
       .sortedBy { it.second }
-      .take(numberOfKeys)
+      .take(numberOfKeySizeGuesses)
       .map { it.first }
       .toIntArray()
   }
 
-  fun breakIntoBlocks(data: ByteArray, keySize: Int): List<ByteArray> = data.toList()
-    .windowed(keySize, keySize, true)
-    .map { it.toByteArray() }
+  private fun breakIntoBlocks(data: ByteArray, keySize: Int): List<ByteArray> =
+    data.toList()
+      .windowed(keySize, keySize, true)
+      .map { it.toByteArray() }
 
-  fun transposeBlocks(blocks: List<ByteArray>, keySize: Int): List<ByteArray> {
+  private fun transposeBlocks(blocks: List<ByteArray>, keySize: Int): List<ByteArray> {
     val result = mutableListOf<ByteArray>()
     for (i in 0 until keySize) {
       val bytes = mutableListOf<Byte>()
@@ -45,9 +46,28 @@ class BreakRepeatingKeyXorCipher(maxKeySize: Int = 40) {
     return result
   }
 
-  fun key(blocks: List<ByteArray>): ByteArray {
-    val singleByteXorCipher = SingleByteXorCipher()
-    return blocks.map { block -> singleByteXorCipher.keyAndScore(block).first }
+  private fun guessKey(blocks: List<ByteArray>): ByteArray {
+    val breakCipher = BreakSingleByteXorCipher()
+    return blocks.map { block -> breakCipher.guessKeyAndScore(block).first }
       .toByteArray()
+  }
+
+  fun tryDecrypt(data: ByteArray, numberOfKeySizeGuesses: Int = 3): List<ByteArray> {
+    val keySizes = guessKeySizes(data, numberOfKeySizeGuesses)
+    val decryptedDataList = mutableListOf<ByteArray>()
+    for (keySize in keySizes) {
+      val blocks = breakIntoBlocks(data, keySize)
+      val transposedBlocks = transposeBlocks(blocks, keySize)
+      println("key size : $keySize")
+      println(blocks.map { it.encodeToHex() })
+      println(transposedBlocks.map { it.encodeToHex() })
+
+      val key = guessKey(transposedBlocks)
+      println("key: ${key.asString(CHARSET)}")
+
+      val decryptedData = RepeatingKeyXorCipher.decrypt(data, key)
+      decryptedDataList.add(decryptedData)
+    }
+    return decryptedDataList
   }
 }
