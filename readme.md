@@ -71,7 +71,7 @@ How? Devise some method for "scoring" a piece of English plaintext. Character fr
 
 #### Detect single-character XOR
 
-One of the 60-character strings in [this file](src/main/resources/set01/challenge04.txt) has been encrypted by single-character XOR.
+One of the 60-character strings in [this file](src/test/resources/set01/challenge04.txt) has been encrypted by single-character XOR.
 
 Find it.
 
@@ -113,7 +113,7 @@ Encrypt a bunch of stuff using your repeating-key XOR function. Encrypt your mai
 > are there to bring you up to speed. This one is there to **qualify** you. If you can do this one, you're probably just 
 > fine up to Set 6.
 
-[There's a file here](src/main/resources/set01/challenge06.txt). It's been base64'd after being encrypted with 
+[There's a file here](src/test/resources/set01/challenge06.txt). It's been base64'd after being encrypted with 
 repeating-key XOR.
 
 Decrypt it.
@@ -154,7 +154,7 @@ it, and a similar technique breaks something much more important.
 
 #### AES in ECB mode
 
-The Base64-encoded content [in this file](src/main/resources/set01/challenge07.txt) has been encrypted via AES-128 in 
+The Base64-encoded content [in this file](src/test/resources/set01/challenge07.txt) has been encrypted via AES-128 in 
 ECB mode under the key
 
 `"YELLOW SUBMARINE".`
@@ -174,7 +174,7 @@ Easiest way: use OpenSSL::Cipher and give it AES-128-ECB as the cipher.
 
 #### Detect AES in ECB mode
 
-[In this file](src/main/resources/set01/challenge08.txt) are a bunch of hex-encoded ciphertexts.
+[In this file](src/test/resources/set01/challenge08.txt) are a bunch of hex-encoded ciphertexts.
 
 One of them has been encrypted with ECB.
 
