@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  kotlin("jvm") version "1.7.0"
+  kotlin("jvm") version "1.7.20"
 }
 
 group = "hr.tjakopan"
@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
   testImplementation(kotlin("test"))
-  testImplementation("io.kotest:kotest-assertions-core:5.3.2")
+  testImplementation("io.kotest:kotest-assertions-core:5.5.1")
 }
 
 tasks.test {

@@ -1,6 +1,8 @@
 package hr.tjakopan.cryptopalls.challenges
 
-class BreakRepeatingKeyXorCipher(maxKeySize: Int = 40) {
+import java.nio.charset.Charset
+
+class BreakRepeatingKeyXorCipher(private val charset: Charset = DEFAULT_CHARSET, maxKeySize: Int = 40) {
   private val keySizes = IntRange(2, maxKeySize)
 
   private fun guessKeySizes(data: ByteArray, numberOfKeySizeGuesses: Int = 3): IntArray {
@@ -47,7 +49,7 @@ class BreakRepeatingKeyXorCipher(maxKeySize: Int = 40) {
   }
 
   private fun guessKey(blocks: List<ByteArray>): ByteArray {
-    val breakCipher = BreakSingleByteXorCipher()
+    val breakCipher = BreakSingleByteXorCipher(charset)
     return blocks.map { block -> breakCipher.guessKeyAndScore(block).first }
       .toByteArray()
   }
@@ -63,7 +65,7 @@ class BreakRepeatingKeyXorCipher(maxKeySize: Int = 40) {
       println(transposedBlocks.map { it.encodeToHex() })
 
       val key = guessKey(transposedBlocks)
-      println("key: ${key.asString(CHARSET)}")
+      println("key: ${key.asString(charset)}")
 
       val decryptedData = RepeatingKeyXorCipher.decrypt(data, key)
       decryptedDataList.add(decryptedData)

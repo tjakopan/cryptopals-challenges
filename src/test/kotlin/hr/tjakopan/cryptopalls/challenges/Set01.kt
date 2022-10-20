@@ -24,6 +24,31 @@ class Set01 {
   }
 
   @Test
+  fun challenge03() {
+    val hex = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+    val encryptedData = hex.decodeHex()
+    val breakCipher = BreakSingleByteXorCipher()
+
+    val decryptedData = breakCipher.tryDecrypt(encryptedData)
+
+    decryptedData.asString() shouldBe "Cooking MC's like a pound of bacon"
+  }
+
+  @Test
+  fun challenge04() {
+    val data = resourceAsText("/set01/challenge04.txt")
+      ?.lines()
+      ?.map { it.decodeHex() }
+      ?: listOf()
+    val breakCipher = BreakSingleByteXorCipher()
+
+    val bytesAndKey = breakCipher.guessTheEncryptedByteArrayAndKey(data)
+    val decryptedLine = SingleByteXorCipher.decrypt(bytesAndKey.first, bytesAndKey.second)
+
+    decryptedLine.asString() shouldBe "Now that the party is jumping\n"
+  }
+
+  @Test
   fun challenge05() {
     val text = "Burning 'em, if you ain't quick and nimble\n" +
         "I go crazy when I hear a cymbal"
@@ -43,5 +68,40 @@ class Set01 {
     val editDistance = editDistance(first.asByteArray(), second.asByteArray())
 
     editDistance shouldBe 37
+  }
+
+  @Test
+  fun challenge06() {
+    val textBase64 = resourceAsText("/set01/challenge06.txt")
+    val encryptedData = textBase64!!.decodeBase64()
+    val breakCipher = BreakRepeatingKeyXorCipher()
+    val expectedText = resourceAsText("/set01/challenge06-expected.txt")
+
+    val decryptedData = breakCipher.tryDecrypt(encryptedData, numberOfKeySizeGuesses = 1)
+    // keySize = 29
+    // key: Terminator X: Bring the noise
+
+    decryptedData[0].asString() shouldBe expectedText
+  }
+
+  @Test
+  fun challenge07() {
+    val textBase64 = resourceAsText("/set01/challenge07.txt")
+    val encryptedData = textBase64!!.decodeBase64()
+    val key = "YELLOW SUBMARINE".asByteArray()
+    val expectedText = resourceAsText("/set01/challenge07-expected.txt")
+
+    val decryptedData = AesCipher.decrypt(encryptedData, key, "ECB")
+
+    decryptedData.asString() shouldBe expectedText
+  }
+
+  @Test
+  fun challenge08() {
+    val lines = resourceAsText("/set01/challenge08.txt")!!.lines()
+
+    val detectedLine = detectEcb(lines)
+
+    detectedLine shouldBe "d880619740a8a19b7840a8a31c810a3d08649af70dc06f4fd5d2d69c744cd283e2dd052f6b641dbf9d11b0348542bb5708649af70dc06f4fd5d2d69c744cd2839475c9dfdbc1d46597949d9c7e82bf5a08649af70dc06f4fd5d2d69c744cd28397a93eab8d6aecd566489154789a6b0308649af70dc06f4fd5d2d69c744cd283d403180c98c8f6db1f2a3f9c4040deb0ab51b29933f2c123c58386b06fba186a"
   }
 }
