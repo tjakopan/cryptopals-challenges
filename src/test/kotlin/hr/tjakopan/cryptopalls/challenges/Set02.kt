@@ -19,11 +19,11 @@ class Set02 {
     val encryptedData = textBase64!!.decodeBase64()
     val key = "YELLOW SUBMARINE".asByteArray()
     val iv = ByteArray(16)
-    val data = AesCipher.decrypt(encryptedData, key, "CBC", iv = iv)
+    val expectedData = AesCipher.decrypt(encryptedData, key, "CBC", iv = iv)
 
-    val encryptedData2 = AesCipher.encryptCbcUsingEcb(data, key, initialIv = iv)
+    val encryptedData2 = AesCipher.encryptCbcUsingEcb(expectedData, key, initialIv = iv)
 
-    val data2 = AesCipher.decrypt(encryptedData2, key, "CBC", iv = iv)
-    data2 shouldBe data
+    val actualData = AesCipher.decrypt(encryptedData2, key, "CBC", iv = iv)
+    actualData shouldBe expectedData
   }
 }
