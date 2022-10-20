@@ -1,6 +1,6 @@
 package hr.tjakopan.cryptopalls.challenges
 
-fun detectEcb(lines: List<String>): String {
+fun detectLineEncryptedWithEcbMode(lines: List<String>): String {
   val linesAndDuplicateBlockCount = lines.map { line ->
     val countPerBlock = mutableMapOf<String, Int>()
     line.windowed(32, 32)

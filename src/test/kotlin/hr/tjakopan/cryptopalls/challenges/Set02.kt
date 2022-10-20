@@ -1,6 +1,7 @@
 package hr.tjakopan.cryptopalls.challenges
 
 import io.kotest.matchers.shouldBe
+import kotlin.random.Random
 import kotlin.test.Test
 
 class Set02 {
@@ -25,5 +26,19 @@ class Set02 {
 
     val actualData = AesCipher.decrypt(encryptedData2, key, "CBC", iv = iv)
     actualData shouldBe expectedData
+  }
+
+  @Test
+  fun challenge11() {
+    repeat(1000) {
+      val randomByte = Random.nextInt().toByte()
+      val data = ByteArray(16 * 3) { randomByte }
+      val encryptedDataAndMode = AesEncryptionOracle.encrypt(data)
+      val expectedMode = encryptedDataAndMode.second
+
+      val actualMode = AesEncryptionOracle.guessMode(encryptedDataAndMode.first)
+
+      actualMode shouldBe expectedMode
+    }
   }
 }
