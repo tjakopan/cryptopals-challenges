@@ -1,5 +1,6 @@
 package hr.tjakopan.cryptopalls.challenges
 
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import kotlin.random.Random
 import kotlin.test.Test
@@ -33,12 +34,34 @@ class Set02 {
     repeat(1000) {
       val randomByte = Random.nextInt().toByte()
       val data = ByteArray(16 * 3) { randomByte }
-      val encryptedDataAndMode = AesEncryptionOracle.encrypt(data)
+      val encryptedDataAndMode = AesEncryptionOracle11.encrypt(data)
       val expectedMode = encryptedDataAndMode.second
 
-      val actualMode = AesEncryptionOracle.guessMode(encryptedDataAndMode.first)
+      val actualMode = AesEncryptionOracle11.detectMode(encryptedDataAndMode.first)
 
       actualMode shouldBe expectedMode
     }
+  }
+
+  @Test
+  fun challenge12() {
+    val key = AesCipher.generateKey(128)
+    val oracle = AesEncryptionOracle12(key.encoded)
+
+    val blockSize = oracle.detectBlockSize()
+    val actualModes = mutableListOf<String>()
+    repeat(1000) {
+      val randomByte = Random.nextInt().toByte()
+      val data = ByteArray(blockSize * 2) {randomByte}
+      val encryptedData = oracle.encryptEcb(data)
+      val mode = oracle.detectMode(encryptedData, blockSize)
+      actualModes.add(mode)
+    }
+    val unknownData = oracle.decryptUnknownData(blockSize)
+    println(unknownData.asString())
+
+    blockSize shouldBe 16
+    actualModes.size shouldBe 1000
+    actualModes.all { it == "ECB" }.shouldBeTrue()
   }
 }

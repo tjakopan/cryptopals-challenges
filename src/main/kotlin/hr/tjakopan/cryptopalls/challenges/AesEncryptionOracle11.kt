@@ -2,7 +2,7 @@ package hr.tjakopan.cryptopalls.challenges
 
 import kotlin.random.Random
 
-object AesEncryptionOracle {
+object AesEncryptionOracle11 {
   fun encrypt(data: ByteArray): Pair<ByteArray, String> {
     require(data.size >= 16 * 3) { "Data needs to be at least 3 times block size (16 bytes) in order to use oracle." }
     val firstByte = data[0]
@@ -22,7 +22,7 @@ object AesEncryptionOracle {
 
   private fun randomIv(): ByteArray = Random.nextBytes(16)
 
-  fun guessMode(encryptedData: ByteArray): String {
+  fun detectMode(encryptedData: ByteArray): String {
     require(encryptedData.size >= 16 * 3) { "Encrypted data needs to be at least 3 times block size (16 bytes) in order to detect mode." }
 
     val hexData = encryptedData.encodeToHex()
